@@ -1,15 +1,25 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { haptic } from '@/lib/haptics';
 
 interface AppHeaderProps {
   children?: React.ReactNode;
   showFunctionMenu?: boolean;
 }
 
-export function AppHeader({ children, showFunctionMenu = true }: AppHeaderProps) {
+export function AppHeader({
+  children,
+  showFunctionMenu = true,
+}: AppHeaderProps) {
   const router = useRouter();
+
+  const handleFunctionMenuPress = () => {
+    haptic.light();
+    router.push('/function-menu');
+  };
 
   return (
     <View style={styles.header}>
@@ -18,16 +28,25 @@ export function AppHeader({ children, showFunctionMenu = true }: AppHeaderProps)
         style={styles.logo}
         contentFit="contain"
       />
+
       <View style={styles.right}>
         {children}
+
         {showFunctionMenu ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="開啟功能選單"
-            onPress={() => router.push('/function-menu')}
-            style={({ pressed }) => [styles.menuButton, pressed && styles.menuButtonPressed]}
+            onPress={handleFunctionMenuPress}
+            style={({ pressed }) => [
+              styles.menuButton,
+              pressed && styles.menuButtonPressed,
+            ]}
           >
-            <IconSymbol size={30} name="square.grid.2x2.fill" color="#2563EB" />
+            <IconSymbol
+              size={30}
+              name="square.grid.2x2.fill"
+              color="#2563EB"
+            />
           </Pressable>
         ) : null}
       </View>
