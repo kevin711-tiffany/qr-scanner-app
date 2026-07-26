@@ -1,4 +1,5 @@
 {
+  "main": "expo-router/entry",
   "scripts": {
     "dev": "concurrently -k \"pnpm dev:server\" \"pnpm dev:mobile\"",
     "dev:server": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
