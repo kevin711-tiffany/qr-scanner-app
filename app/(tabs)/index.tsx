@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, Pressable, Platform } from 'react-native';
+import { ScrollView, Text, View, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { ScreenContainer } from '@/components/screen-container';

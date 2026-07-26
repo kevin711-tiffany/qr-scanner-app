@@ -2,6 +2,7 @@ import { ScrollView, Text, View, TextInput, Pressable, Alert, Switch } from 'rea
 import { useState, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { ScreenContainer } from '@/components/screen-container';
 import { AppHeader } from '@/components/app-header';
@@ -12,7 +13,6 @@ import { useTabReset } from '@/hooks/use-tab-reset';
 import { cn } from '@/lib/utils';
 import { haptic } from '@/lib/haptics';
 import { getSoundEnabled, setSoundEnabled, playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
-import { Platform } from 'react-native';
 
 // 解析掃描到的 QR Code 內容，支援兩種格式：
 // 1. JSON 格式：{"code":"A01","sendUrl":"http://...","remark1":"...","remark2":"...","remark3":"..."}
@@ -338,6 +338,7 @@ export default function SettingsScreen() {
             <TextInput
               value={settings.sendUrl}
               editable={false}
+              secureTextEntry
               placeholder="請掃描 QR Code 帶入傳送網址"
               placeholderTextColor="#999"
               autoCapitalize="none"
@@ -351,16 +352,17 @@ export default function SettingsScreen() {
 
           {/* 備註一 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">備註一</Text>
+            <Text className="text-foreground font-semibold mb-2">備註一（唯讀，由 QR Code 帶入）</Text>
             <TextInput
               value={settings.remark1}
-              onChangeText={(value) => updateField('remark1', value.slice(0, 30))}
-              placeholder="輸入備註（最多 30 字元）"
+              editable={false}
+              secureTextEntry
+              placeholder="請掃描 QR Code 帶入備註一"
               placeholderTextColor="#999"
               maxLength={30}
               className={cn(
-                'border border-border rounded-lg p-3 text-foreground',
-                'bg-surface'
+                'border border-border rounded-lg p-3',
+                'bg-border/30 text-muted'
               )}
             />
             <Text className="text-muted text-xs mt-1">{settings.remark1.length}/30</Text>
@@ -368,16 +370,17 @@ export default function SettingsScreen() {
 
           {/* 備註二 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">備註二</Text>
+            <Text className="text-foreground font-semibold mb-2">備註二（唯讀，由 QR Code 帶入）</Text>
             <TextInput
               value={settings.remark2}
-              onChangeText={(value) => updateField('remark2', value.slice(0, 30))}
-              placeholder="輸入備註（最多 30 字元）"
+              editable={false}
+              secureTextEntry
+              placeholder="請掃描 QR Code 帶入備註二"
               placeholderTextColor="#999"
               maxLength={30}
               className={cn(
-                'border border-border rounded-lg p-3 text-foreground',
-                'bg-surface'
+                'border border-border rounded-lg p-3',
+                'bg-border/30 text-muted'
               )}
             />
             <Text className="text-muted text-xs mt-1">{settings.remark2.length}/30</Text>
@@ -419,13 +422,25 @@ export default function SettingsScreen() {
               {isSaving ? '儲存中...' : '儲存設定'}
             </Text>
           </Pressable>
-          {/* APP 版本號 */}
-          {/* 距儲存按鈕下方 20px、與版尾保持 30px 距離（外層 gap-6 已有間距，改用 style 精準控制） */}
-          <View className="items-center" style={{ marginTop: 20, paddingBottom: 30 }}>
-            <Text className="text-muted text-sm">
-              APP 版本：{Constants.expoConfig?.version ?? '未知'}
-            </Text>
-          </View>
+          {/* 關於本程式：點擊後顯示完整版本資訊 */}
+          <Pressable
+            onPress={() => {
+              haptic.light();
+              router.push('/(tabs)/version-info');
+            }}
+            style={({ pressed }) => [{ opacity: pressed ? 0.75 : 1 }]}
+            className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-between"
+          >
+            <View className="flex-1 mr-3">
+              <Text className="text-foreground font-semibold">關於本程式</Text>
+              <Text className="text-muted text-xs mt-1">
+                APP 版本：{Constants.expoConfig?.version ?? '未知'}
+              </Text>
+            </View>
+            <Text className="text-primary text-xl font-semibold">›</Text>
+          </Pressable>
+
+          <View style={{ paddingBottom: 30 }} />
         </View>
       </ScrollView>
     </ScreenContainer>

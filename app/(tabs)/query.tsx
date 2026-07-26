@@ -31,7 +31,7 @@ export default function QueryScreen() {
       setShowEndPicker(false);
       // 重新載入已儲存設定，確保拿到設定頁最新儲存的傳送網址
       loadSettings();
-    }, [])
+    }, [loadSettings])
   );
 
   // 已在查詢分頁時再次點擊「查詢」按鈕：重置回日期設定畫面

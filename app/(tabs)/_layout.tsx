@@ -92,6 +92,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="function-menu"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="version-info"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         listeners={resetOnReselect("settings")}
         options={{

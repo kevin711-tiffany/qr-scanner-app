@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, Pressable, Alert, FlatList } from 'react-native';
+import { Text, View, Pressable, Alert, FlatList } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
@@ -11,7 +11,6 @@ import { useTabReset } from '@/hooks/use-tab-reset';
 import { cn } from '@/lib/utils';
 import { haptic } from '@/lib/haptics';
 import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
-import { Platform } from 'react-native';
 
 interface ScannedItem {
   id: string;
@@ -22,11 +21,10 @@ interface ScannedItem {
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const isFocused = useIsFocused();
-  const { settings, loadSettings, getStoredSettings } = useBasicSettings();
+  const { loadSettings, getStoredSettings } = useBasicSettings();
   const { fetchWebContent, webViewData } = useWebView();
   
   const [scannedItems, setScannedItems] = useState<ScannedItem[]>([]);
-  const [isCameraReady, setIsCameraReady] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showWebView, setShowWebView] = useState(false);
   const [banner, setBanner] = useState<{ type: 'success' | 'warning'; text: string } | null>(null);
@@ -42,7 +40,7 @@ export default function ScanScreen() {
       lastScanRef.current = { value: '', time: 0 };
       // 重新載入已儲存設定，確保拿到設定頁最新儲存的傳送網址
       loadSettings();
-    }, [])
+    }, [loadSettings])
   );
 
   // 已在掃描分頁時再次點擊「掃描」按鈕：重置回初始掃描畫面
@@ -59,7 +57,7 @@ export default function ScanScreen() {
     if (permission === null) {
       requestPermission();
     }
-  }, [permission]);
+  }, [permission, requestPermission]);
 
   // 預先載入提示音，讓第一次掃描的音效不延遲
   useEffect(() => {
@@ -243,7 +241,7 @@ export default function ScanScreen() {
               barcodeScannerSettings={{
                 barcodeTypes: ['qr'],
               }}
-              onCameraReady={() => setIsCameraReady(true)}
+             
               style={{ flex: 1 }}
             />
           ) : (

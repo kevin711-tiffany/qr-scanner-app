@@ -26,6 +26,7 @@ const MAPPING = {
   "checkmark.circle.fill": "check-circle",
   "xmark.circle.fill": "cancel",
   "magnifyingglass": "search",
+  "square.grid.2x2.fill": "apps",
 } as IconMapping;
 
 /**

@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Native generated projects (Expo prebuild)
+android/
+ios/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+*.key
+service-account*.json
+
+# Logs and test output
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+coverage/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary build files
+*.apk
+*.aab
+*.ipa
+*.tgz

@@ -1,0 +1,84 @@
+name: Store Build and Submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Store platform
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - android
+          - ios
+      submit:
+        description: Submit finished builds to Google Play Internal Track / TestFlight
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: store-release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm lint
+      - run: pnpm test
+
+  build-android:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'android' }}
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+          packager: pnpm
+      - name: Build Android AAB
+        run: eas build --platform android --profile production --non-interactive --no-wait ${{ inputs.submit && '--auto-submit' || '' }}
+
+  build-ios:
+    if: ${{ inputs.platform == 'all' || inputs.platform == 'ios' }}
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+          packager: pnpm
+      - name: Build iOS App
+        run: eas build --platform ios --profile production --non-interactive --no-wait ${{ inputs.submit && '--auto-submit' || '' }}

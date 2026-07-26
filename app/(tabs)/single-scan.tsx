@@ -1,4 +1,4 @@
-import { Text, View, Pressable, ActivityIndicator } from 'react-native';
+import { Text, View, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
@@ -11,7 +11,6 @@ import { useWebView } from '@/hooks/use-web-view';
 import { useTabReset } from '@/hooks/use-tab-reset';
 import { haptic } from '@/lib/haptics';
 import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
-import { Platform } from 'react-native';
 
 /**
  * 單獨掃描分頁：掃描到單一 QR Code 後立即自動傳送（usetype=D），
@@ -42,7 +41,7 @@ export default function SingleScanScreen() {
       processingRef.current = false;
       // 重新載入已儲存設定，確保拿到設定頁最新儲存的傳送網址
       loadSettings();
-    }, [])
+    }, [loadSettings])
   );
 
   // 已在單獨掃描分頁時再次點擊「單獨掃描」按鈕：重置回初始掃描畫面
@@ -60,7 +59,7 @@ export default function SingleScanScreen() {
     if (permission === null) {
       requestPermission();
     }
-  }, [permission]);
+  }, [permission, requestPermission]);
 
   // 預先載入提示音，讓第一次掃描的音效不延遲
   useEffect(() => {
