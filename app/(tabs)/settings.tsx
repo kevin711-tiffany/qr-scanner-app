@@ -332,63 +332,9 @@ export default function SettingsScreen() {
             <Text className="text-muted text-xs mt-1">{settings.code.length}/30</Text>
           </View>
 
-          {/* 傳送網址 */}
+          {/* 備註 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">傳送網址（唯讀，由 QR Code 帶入）</Text>
-            <TextInput
-              value={settings.sendUrl}
-              editable={false}
-              secureTextEntry
-              placeholder="請掃描 QR Code 帶入傳送網址"
-              placeholderTextColor="#999"
-              autoCapitalize="none"
-              keyboardType="url"
-              className={cn(
-                'border border-border rounded-lg p-3',
-                'bg-border/30 text-muted'
-              )}
-            />
-          </View>
-
-          {/* 備註一 */}
-          <View>
-            <Text className="text-foreground font-semibold mb-2">備註一（唯讀，由 QR Code 帶入）</Text>
-            <TextInput
-              value={settings.remark1}
-              editable={false}
-              secureTextEntry
-              placeholder="請掃描 QR Code 帶入備註一"
-              placeholderTextColor="#999"
-              maxLength={30}
-              className={cn(
-                'border border-border rounded-lg p-3',
-                'bg-border/30 text-muted'
-              )}
-            />
-            <Text className="text-muted text-xs mt-1">{settings.remark1.length}/30</Text>
-          </View>
-
-          {/* 備註二 */}
-          <View>
-            <Text className="text-foreground font-semibold mb-2">備註二（唯讀，由 QR Code 帶入）</Text>
-            <TextInput
-              value={settings.remark2}
-              editable={false}
-              secureTextEntry
-              placeholder="請掃描 QR Code 帶入備註二"
-              placeholderTextColor="#999"
-              maxLength={30}
-              className={cn(
-                'border border-border rounded-lg p-3',
-                'bg-border/30 text-muted'
-              )}
-            />
-            <Text className="text-muted text-xs mt-1">{settings.remark2.length}/30</Text>
-          </View>
-
-          {/* 備註三 */}
-          <View>
-            <Text className="text-foreground font-semibold mb-2">備註三</Text>
+            <Text className="text-foreground font-semibold mb-2">備註</Text>
             <TextInput
               value={settings.remark3}
               onChangeText={(value) => updateField('remark3', value.slice(0, 30))}
