@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Alert, FlatList } from 'react-native';
+import { Text, View, Pressable, Alert, FlatList, StyleSheet } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import { useTabReset } from '@/hooks/use-tab-reset';
 import { cn } from '@/lib/utils';
 import { haptic } from '@/lib/haptics';
 import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
+import { PrimaryButton, DangerButton, ACTION_BUTTON_TOKENS } from '@/components/ui/action-button';
 
 interface ScannedItem {
   id: string;
@@ -304,45 +305,42 @@ export default function ScanScreen() {
           )}
         </View>
 
-        {/* 操作按鈕 */}
-        <View className="flex-row gap-3 p-4 bg-surface border-t border-border">
-          <Pressable
-            onPress={handleClear}
-            disabled={scannedItems.length === 0}
-            style={({ pressed }) => [
-              {
-                opacity: pressed ? 0.8 : 1,
-                flex: 1,
-              },
-            ]}
-            className={cn(
-              'bg-error/20 rounded-lg p-3 items-center',
-              scannedItems.length === 0 && 'opacity-50'
-            )}
-          >
-            <Text className="text-error font-semibold">清除</Text>
-          </Pressable>
+        {/* 操作按鈕：固定尺寸、水平置中，並與底部分頁保留 50px 距離 */}
+			<View style={styles.actionArea}>
+			  <View style={styles.actionRow}>
+				<PrimaryButton
+				  title={isSubmitting ? '傳送中...' : '完成'}
+				  onPress={handleComplete}
+				  disabled={isSubmitting || scannedItems.length === 0}
+				/>
 
-          <Pressable
-            onPress={handleComplete}
-            disabled={isSubmitting || scannedItems.length === 0}
-            style={({ pressed }) => [
-              {
-                opacity: pressed ? 0.8 : 1,
-                flex: 1,
-              },
-            ]}
-            className={cn(
-              'bg-primary rounded-lg p-3 items-center',
-              isSubmitting && 'opacity-60'
-            )}
-          >
-            <Text className="text-white font-bold">
-              {isSubmitting ? '傳送中...' : '完成'}
-            </Text>
-          </Pressable>
-        </View>
+				<DangerButton
+				  title="清除"
+				  onPress={handleClear}
+				  disabled={scannedItems.length === 0}
+				/>
+			  </View>
+			</View>
       </View>
     </ScreenContainer>
   );
 }
+
+
+const styles = StyleSheet.create({
+  actionArea: {
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+    alignItems: 'center',
+    paddingTop: 16,
+    paddingBottom: ACTION_BUTTON_TOKENS.bottomSpacing,
+  },
+
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    columnGap: ACTION_BUTTON_TOKENS.gap,
+  },
+});
