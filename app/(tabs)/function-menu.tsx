@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+
 import { AppHeader } from '@/components/app-header';
 import { HtmlResponseView } from '@/components/html-response-view';
 import { ScreenContainer } from '@/components/screen-container';
@@ -16,19 +17,35 @@ export default function FunctionMenuScreen() {
   useFocusEffect(
     useCallback(() => {
       let active = true;
+
       setIsLoading(true);
       setError(null);
 
       void (async () => {
         try {
           const settings = await getStoredSettings();
-          if (!settings.sendUrl.trim()) throw new Error('請先在設定頁掃描 QR Code 帶入傳送網址');
+
+          if (!settings.sendUrl.trim()) {
+            throw new Error('請先在設定頁掃描 QR Code 帶入傳送網址');
+          }
+
           const content = await fetchFunctionMenuHtml(settings);
-          if (active) setHtml(content);
+
+          if (active) {
+            setHtml(content);
+          }
         } catch (cause) {
-          if (active) setError(cause instanceof Error ? cause.message : '功能選單載入失敗');
+          if (active) {
+            setError(
+              cause instanceof Error
+                ? cause.message
+                : '功能選單載入失敗'
+            );
+          }
         } finally {
-          if (active) setIsLoading(false);
+          if (active) {
+            setIsLoading(false);
+          }
         }
       })();
 
@@ -40,7 +57,8 @@ export default function FunctionMenuScreen() {
 
   return (
     <ScreenContainer>
-      <AppHeader showFunctionMenu={false} />
+      <AppHeader />
+
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-muted">功能選單載入中...</Text>
