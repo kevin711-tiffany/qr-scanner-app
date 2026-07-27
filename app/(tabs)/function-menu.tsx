@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 
@@ -29,6 +30,10 @@ import {
 import {
   useBasicSettings,
 } from '@/hooks/use-basic-settings';
+
+import {
+  subscribeTabReset,
+} from '@/lib/tab-reset';
 
 import {
   encodeForm,
@@ -75,6 +80,40 @@ export default function FunctionMenuScreen() {
     currentUrl,
     setCurrentUrl,
   ] = useState('');
+
+  /*
+   * 每次功能選單收到重置信號時增加此值。
+   *
+   * reloadKey 改變後，useFocusEffect 會重新執行，
+   * 再次 POST 至 sendUrl，讓 WebView 回到功能選單首頁。
+   */
+  const [
+    reloadKey,
+    setReloadKey,
+  ] = useState(0);
+
+  /*
+   * AppHeader 在目前已位於 /function-menu 時，
+   * 再次點擊右上角選單 ICON，會送出：
+   *
+   * emitTabReset('function-menu')
+   *
+   * 此處接收訊號並重新載入功能選單。
+   */
+  useEffect(() => {
+    const unsubscribe =
+      subscribeTabReset(
+        'function-menu',
+        () => {
+          setReloadKey(
+            (currentValue) =>
+              currentValue + 1
+          );
+        }
+      );
+
+    return unsubscribe;
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -146,7 +185,10 @@ export default function FunctionMenuScreen() {
       return () => {
         active = false;
       };
-    }, [getStoredSettings])
+    }, [
+      getStoredSettings,
+      reloadKey,
+    ])
   );
 
   const handleNavigationChange =
@@ -185,6 +227,11 @@ export default function FunctionMenuScreen() {
       ) : request ? (
         <View className="flex-1 bg-white overflow-hidden">
           <WebView
+            /*
+             * reloadKey 改變時重新建立 WebView，
+             * 確保 POST 請求與網頁瀏覽紀錄完整重置。
+             */
+            key={`function-menu-${reloadKey}`}
             source={request}
             originWhitelist={['*']}
             style={{
