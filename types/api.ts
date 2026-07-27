@@ -5,6 +5,7 @@ export interface BaseApiParams {
   remark3: string;
 }
 
-export interface FunctionMenuApiParams extends BaseApiParams {
+export interface FunctionMenuApiParams
+  extends BaseApiParams {
   usetype: 'E';
 }

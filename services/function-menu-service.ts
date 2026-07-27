@@ -1,8 +1,18 @@
-import { postFormForHtml } from '@/services/api-service';
-import type { FunctionMenuApiParams } from '@/types/api';
-import type { BasicSettings } from '@/types/settings';
+import {
+  postFormForHtml,
+} from '@/services/api-service';
 
-export const buildFunctionMenuParams = (settings: BasicSettings): FunctionMenuApiParams => ({
+import type {
+  FunctionMenuApiParams,
+} from '@/types/api';
+
+import type {
+  BasicSettings,
+} from '@/types/settings';
+
+export const buildFunctionMenuParams = (
+  settings: BasicSettings
+): FunctionMenuApiParams => ({
   code: settings.code,
   remark1: settings.remark1,
   remark2: settings.remark2,
@@ -10,5 +20,10 @@ export const buildFunctionMenuParams = (settings: BasicSettings): FunctionMenuAp
   usetype: 'E',
 });
 
-export const fetchFunctionMenuHtml = (settings: BasicSettings): Promise<string> =>
-  postFormForHtml(settings.sendUrl, buildFunctionMenuParams(settings));
+export const fetchFunctionMenuHtml = (
+  settings: BasicSettings
+): Promise<string> =>
+  postFormForHtml(
+    settings.sendUrl,
+    buildFunctionMenuParams(settings)
+  );

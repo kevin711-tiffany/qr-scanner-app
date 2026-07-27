@@ -1,9 +1,10 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { haptic } from '@/lib/haptics';
+import { emitTabReset } from '@/lib/tab-reset';
 
 interface AppHeaderProps {
   children?: React.ReactNode;
@@ -15,9 +16,20 @@ export function AppHeader({
   showFunctionMenu = true,
 }: AppHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleFunctionMenuPress = () => {
     haptic.light();
+
+    /*
+     * 已經位於功能選單時，不再 push 相同路由，
+     * 而是通知功能選單重新讀取 sendUrl。
+     */
+    if (pathname === '/function-menu') {
+      emitTabReset('function-menu');
+      return;
+    }
+
     router.push('/function-menu');
   };
 
