@@ -1,20 +1,24 @@
 import { ScrollView, Text, View, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
+
 import { ScreenContainer } from '@/components/screen-container';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColors } from '@/hooks/use-colors';
 import { haptic } from '@/lib/haptics';
 
+type HomeRoute = '/scan' | '/single-scan' | '/query' | '/function-menu' | '/settings';
+
 /**
  * 首頁：APP 開啟後的預設畫面
- * 顯示 Mr.control LOGO 與公司名稱，並提供三大功能的快速入口
+ * 顯示 Mr.control LOGO、公司名稱與所有功能入口。
+ * 未來新增功能時，可在 menuItems 中繼續加入首頁按鈕。
  */
 export default function HomeScreen() {
   const router = useRouter();
   const colors = useColors();
 
-  const goTo = (path: '/scan' | '/single-scan' | '/query' | '/settings') => {
+  const goTo = (path: HomeRoute) => {
     haptic.light();
     router.push(path);
   };
@@ -22,29 +26,31 @@ export default function HomeScreen() {
   const menuItems = [
     {
       key: 'scan',
-      title: 'QR Code 掃描',
-      description: '連續讀取條碼並傳送資料',
+      title: '連續掃描',
       icon: 'qrcode.viewfinder' as const,
       onPress: () => goTo('/scan'),
     },
     {
       key: 'single-scan',
       title: '單獨掃描',
-      description: '掃描單一條碼後立即傳送',
       icon: 'bolt.fill' as const,
       onPress: () => goTo('/single-scan'),
     },
     {
       key: 'query',
       title: '資料查詢',
-      description: '按日期區間查詢掃描記錄',
       icon: 'magnifyingglass' as const,
       onPress: () => goTo('/query'),
     },
     {
+      key: 'function-menu',
+      title: '功能選單',
+      icon: 'square.grid.2x2.fill' as const,
+      onPress: () => goTo('/function-menu'),
+    },
+    {
       key: 'settings',
-      title: '基本資料設定',
-      description: '設定代碼、傳送網址與備註',
+      title: '資料設定',
       icon: 'gearshape.fill' as const,
       onPress: () => goTo('/settings'),
     },
@@ -52,7 +58,11 @@ export default function HomeScreen() {
 
   return (
     <ScreenContainer>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-6">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="p-6"
+        showsVerticalScrollIndicator={false}
+      >
         <View className="flex-1">
           {/* 品牌區塊 */}
           <View className="items-center mt-12 mb-10">
@@ -66,25 +76,39 @@ export default function HomeScreen() {
             </Text>
           </View>
 
-          {/* 功能捷徑 */}
-          <View className="gap-4">
+          {/* 功能捷徑：每列兩個按鈕 */}
+          <View className="flex-row flex-wrap justify-between gap-y-4">
             {menuItems.map((item) => (
               <Pressable
                 key={item.key}
+                accessibilityRole="button"
+                accessibilityLabel={item.title}
                 onPress={item.onPress}
+                className="w-[48%]"
                 style={({ pressed }) => [
-                  { opacity: pressed ? 0.8 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] },
+                  {
+                    opacity: pressed ? 0.8 : 1,
+                    transform: [{ scale: pressed ? 0.97 : 1 }],
+                  },
                 ]}
               >
-                <View className="flex-row items-center bg-surface border border-border rounded-2xl p-5">
-                  <View className="w-12 h-12 rounded-xl bg-primary/10 items-center justify-center mr-4">
-                    <IconSymbol size={28} name={item.icon} color={colors.primary} />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-foreground text-lg font-semibold">{item.title}</Text>
-                    <Text className="text-muted text-sm mt-0.5">{item.description}</Text>
-                  </View>
-                  <IconSymbol size={22} name="chevron.right" color={colors.muted} />
+                <View className="min-h-32 items-center justify-center bg-surface border border-border rounded-2xl px-3 py-5">
+<View
+  className="rounded-2xl bg-primary/10 items-center justify-center mb-3"
+  style={{
+    width: 72,
+    height: 72,
+  }}
+>
+    <IconSymbol
+        size={44}
+        name={item.icon}
+        color={colors.primary}
+    />
+</View>
+                  <Text className="text-foreground text-lg font-semibold text-center">
+                    {item.title}
+                  </Text>
                 </View>
               </Pressable>
             ))}
