@@ -10,8 +10,8 @@ type IconSymbolName = keyof typeof MAPPING;
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
- * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
- * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
+ * - see Material Icons in the Icons Directory.
+ * - see SF Symbols in the SF Symbols app.
  */
 const MAPPING = {
   "house.fill": "home",
@@ -26,13 +26,16 @@ const MAPPING = {
   "checkmark.circle.fill": "check-circle",
   "xmark.circle.fill": "cancel",
   "magnifyingglass": "search",
+
+  // 新增：網站 Icon (Android -> Material Icons)
+  "globe": "public",
+
   "square.grid.2x2.fill": "apps",
 } as IconMapping;
 
 /**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
- * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
+ * An icon component that uses native SF Symbols on iOS,
+ * and Material Icons on Android and web.
  */
 export function IconSymbol({
   name,
@@ -46,5 +49,12 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  return (
+    <MaterialIcons
+      color={color}
+      size={size}
+      name={MAPPING[name]}
+      style={style}
+    />
+  );
 }
