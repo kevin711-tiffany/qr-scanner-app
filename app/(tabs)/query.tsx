@@ -182,7 +182,9 @@ export default function QueryScreen() {
                         : 'bg-surface border-border'
                     )}
                   >
-                    <Text allowFontScaling={false} maxFontSizeMultiplier={1}
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1}
                       className={cn(
                         'font-semibold',
                         quickRange === option.key ? 'text-white' : 'text-foreground'

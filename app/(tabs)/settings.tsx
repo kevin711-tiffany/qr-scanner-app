@@ -318,7 +318,9 @@ export default function SettingsScreen() {
           {/* 代碼 */}
           <View>
             <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">代碼（唯讀，由 QR Code 帶入）</Text>
-            <TextInput allowFontScaling={false} maxFontSizeMultiplier={1}
+            <TextInput
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
               value={settings.code}
               editable={false}
               placeholder="請掃描 QR Code 帶入代碼"
@@ -335,7 +337,9 @@ export default function SettingsScreen() {
           {/* 備註 */}
           <View>
             <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">備註</Text>
-            <TextInput allowFontScaling={false} maxFontSizeMultiplier={1}
+            <TextInput
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
               value={settings.remark3}
               onChangeText={(value) => updateField('remark3', value.slice(0, 30))}
               placeholder="輸入備註（最多 30 字元）"

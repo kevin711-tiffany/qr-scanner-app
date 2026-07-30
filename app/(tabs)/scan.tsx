@@ -272,7 +272,9 @@ export default function ScanScreen() {
                 banner.type === 'warning' ? 'bg-white/95' : 'bg-success/90'
               )}
             >
-              <Text allowFontScaling={false} maxFontSizeMultiplier={1}
+              <Text
+                allowFontScaling={false}
+                maxFontSizeMultiplier={1}
                 className={cn(
                   'font-bold text-center',
                   banner.type === 'warning' ? 'text-red-600' : 'text-white'

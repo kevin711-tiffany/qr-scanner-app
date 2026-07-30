@@ -80,7 +80,9 @@ export default function ThemeLabScreen() {
                   setLastAction(`Applied ${scheme} globally`);
                 }}
               >
-                <Text allowFontScaling={false} maxFontSizeMultiplier={1}
+                <Text
+                  allowFontScaling={false}
+                  maxFontSizeMultiplier={1}
                   style={[
                     styles.schemeToggleTitle,
                     {
@@ -93,7 +95,9 @@ export default function ThemeLabScreen() {
                 >
                   {scheme === "light" ? "Light preview" : "Dark preview"}
                 </Text>
-                <Text allowFontScaling={false} maxFontSizeMultiplier={1}
+                <Text
+                  allowFontScaling={false}
+                  maxFontSizeMultiplier={1}
                   style={[
                     styles.schemeToggleSubtitle,
                     {
