@@ -47,7 +47,7 @@ export function PrimaryButton({
           pressed && !disabled && styles.pressed,
         ]}
       >
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} style={styles.buttonText}>{title}</Text>
       </Pressable>
     </View>
   );
@@ -76,7 +76,7 @@ export function DangerButton({
           pressed && !disabled && styles.pressed,
         ]}
       >
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} style={styles.buttonText}>{title}</Text>
       </Pressable>
     </View>
   );

@@ -190,8 +190,8 @@ export default function ScanScreen() {
 
         {webViewData.error ? (
           <View className="bg-error/10 p-4 m-4 rounded-lg">
-            <Text className="text-error font-semibold mb-2">錯誤</Text>
-            <Text className="text-error text-sm">{webViewData.error}</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold mb-2">錯誤</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm">{webViewData.error}</Text>
           </View>
         ) : (
           <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
@@ -203,12 +203,12 @@ export default function ScanScreen() {
   if (!permission) {
     return (
       <ScreenContainer className="items-center justify-center p-4">
-        <Text className="text-foreground text-center mb-4">需要相機權限</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-center mb-4">需要相機權限</Text>
         <Pressable
           onPress={requestPermission}
           className="bg-primary rounded-lg p-4"
         >
-          <Text className="text-white font-bold">授予權限</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">授予權限</Text>
         </Pressable>
       </ScreenContainer>
     );
@@ -217,12 +217,12 @@ export default function ScanScreen() {
   if (!permission.granted) {
     return (
       <ScreenContainer className="items-center justify-center p-4">
-        <Text className="text-foreground text-center mb-4">相機權限被拒絕</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-center mb-4">相機權限被拒絕</Text>
         <Pressable
           onPress={requestPermission}
           className="bg-primary rounded-lg p-4"
         >
-          <Text className="text-white font-bold">重新請求權限</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">重新請求權限</Text>
         </Pressable>
       </ScreenContainer>
     );
@@ -247,19 +247,19 @@ export default function ScanScreen() {
             />
           ) : (
             <View className="flex-1 items-center justify-center">
-              <Text className="text-white/70">相機已暫停</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white/70">相機已暫停</Text>
             </View>
           )}
 
           {/* 掃描框 */}
           <View className="absolute inset-0 items-center justify-center pointer-events-none">
             <View className="w-64 h-64 border-4 border-primary rounded-lg" />
-            <Text className="text-white mt-4 text-center">對準 QR Code</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white mt-4 text-center">對準 QR Code</Text>
           </View>
 
           {/* 已掃描計數 */}
           <View className="absolute top-4 right-4 bg-black/70 px-4 py-2 rounded-lg">
-            <Text className="text-white font-bold text-lg">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold text-lg">
               已掃描：{scannedItems.length}
             </Text>
           </View>
@@ -272,7 +272,7 @@ export default function ScanScreen() {
                 banner.type === 'warning' ? 'bg-white/95' : 'bg-success/90'
               )}
             >
-              <Text
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1}
                 className={cn(
                   'font-bold text-center',
                   banner.type === 'warning' ? 'text-red-600' : 'text-white'
@@ -292,7 +292,7 @@ export default function ScanScreen() {
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <View className="bg-background p-3 rounded-lg mb-2 border border-border">
-                  <Text className="text-foreground text-sm font-mono break-words">
+                  <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-sm font-mono break-words">
                     {item.value}
                   </Text>
                 </View>
@@ -301,7 +301,7 @@ export default function ScanScreen() {
               nestedScrollEnabled
             />
           ) : (
-            <Text className="text-muted text-center py-4">尚未掃描任何 QR Code</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-center py-4">尚未掃描任何 QR Code</Text>
           )}
         </View>
 

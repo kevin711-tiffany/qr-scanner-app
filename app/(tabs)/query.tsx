@@ -137,8 +137,8 @@ export default function QueryScreen() {
 
         {webViewData.error ? (
           <View className="bg-error/10 p-4 m-4 rounded-lg">
-            <Text className="text-error font-semibold mb-2">錯誤</Text>
-            <Text className="text-error text-sm">{webViewData.error}</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold mb-2">錯誤</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm">{webViewData.error}</Text>
           </View>
         ) : (
           <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
@@ -154,13 +154,13 @@ export default function QueryScreen() {
         <View className="gap-6">
           {/* 標題 */}
           <View>
-            <Text className="text-2xl font-bold text-foreground mb-2">資料查詢</Text>
-            <Text className="text-muted text-sm">按日期區間查詢掃描記錄</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-2xl font-bold text-foreground mb-2">資料查詢</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-sm">按日期區間查詢掃描記錄</Text>
           </View>
 
           {/* 快速日期選項 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">快速選擇</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">快速選擇</Text>
             <View className="flex-row gap-3">
               {(
                 [
@@ -182,7 +182,7 @@ export default function QueryScreen() {
                         : 'bg-surface border-border'
                     )}
                   >
-                    <Text
+                    <Text allowFontScaling={false} maxFontSizeMultiplier={1}
                       className={cn(
                         'font-semibold',
                         quickRange === option.key ? 'text-white' : 'text-foreground'
@@ -198,12 +198,12 @@ export default function QueryScreen() {
 
           {/* 起始日期 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">起始日期</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">起始日期</Text>
             <Pressable
               onPress={() => setShowStartPicker(true)}
               className="border border-border rounded-lg p-4 bg-surface"
             >
-              <Text className="text-foreground text-lg">{formatDate(startDate)}</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-lg">{formatDate(startDate)}</Text>
             </Pressable>
 
             {showStartPicker && (
@@ -221,19 +221,19 @@ export default function QueryScreen() {
                 onPress={() => setShowStartPicker(false)}
                 className="mt-2 bg-primary rounded-lg p-3"
               >
-                <Text className="text-white text-center font-semibold">確認</Text>
+                <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-center font-semibold">確認</Text>
               </Pressable>
             )}
           </View>
 
           {/* 結束日期 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">結束日期</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">結束日期</Text>
             <Pressable
               onPress={() => setShowEndPicker(true)}
               className="border border-border rounded-lg p-4 bg-surface"
             >
-              <Text className="text-foreground text-lg">{formatDate(endDate)}</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-lg">{formatDate(endDate)}</Text>
             </Pressable>
 
             {showEndPicker && (
@@ -251,7 +251,7 @@ export default function QueryScreen() {
                 onPress={() => setShowEndPicker(false)}
                 className="mt-2 bg-primary rounded-lg p-3"
               >
-                <Text className="text-white text-center font-semibold">確認</Text>
+                <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-center font-semibold">確認</Text>
               </Pressable>
             )}
           </View>
@@ -271,7 +271,7 @@ export default function QueryScreen() {
               isQuerying && 'opacity-60'
             )}
           >
-            <Text className="text-white font-bold text-lg">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold text-lg">
               {isQuerying ? '查詢中...' : '查詢'}
             </Text>
           </Pressable>

@@ -1,5 +1,4 @@
 import "@/global.css";
-import "@/lib/disable-font-scaling";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";

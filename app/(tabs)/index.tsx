@@ -109,7 +109,7 @@ export default function HomeScreen() {
               style={{ width: 273, height: 46 }}
               contentFit="contain"
             />
-            <Text className="text-foreground text-2xl font-semibold mt-4">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-2xl font-semibold mt-4">
               禾詰企業有限公司
             </Text>
           </View>
@@ -144,7 +144,7 @@ export default function HomeScreen() {
                       color={colors.primary}
                     />
                   </View>
-                  <Text className="text-foreground text-lg font-semibold text-center">
+                  <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-lg font-semibold text-center">
                     {item.title}
                   </Text>
                 </View>

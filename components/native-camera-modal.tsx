@@ -74,21 +74,21 @@ export function NativeCameraModal({
         {!permission ? (
           <View className="flex-1 items-center justify-center px-6">
             <ActivityIndicator size="large" />
-            <Text className="text-white mt-4">正在確認相機權限…</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white mt-4">正在確認相機權限…</Text>
           </View>
         ) : !permission.granted ? (
           <View className="flex-1 items-center justify-center px-6">
-            <Text className="text-white text-lg text-center mb-6">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-lg text-center mb-6">
               拍攝上傳照片需要相機權限。
             </Text>
             <Pressable
               onPress={requestPermission}
               className="bg-primary rounded-xl px-6 py-4"
             >
-              <Text className="text-white text-lg font-semibold">允許使用相機</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-lg font-semibold">允許使用相機</Text>
             </Pressable>
             <Pressable onPress={onCancel} className="mt-5 px-6 py-3">
-              <Text className="text-white text-base">取消</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-base">取消</Text>
             </Pressable>
           </View>
         ) : (
@@ -106,7 +106,7 @@ export function NativeCameraModal({
                 disabled={isCapturing}
                 className="bg-black/60 rounded-full px-5 py-3"
               >
-                <Text className="text-white text-base">取消</Text>
+                <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white text-base">取消</Text>
               </Pressable>
             </View>
 
@@ -120,7 +120,7 @@ export function NativeCameraModal({
               >
                 <View className="w-16 h-16 rounded-full bg-white" />
               </Pressable>
-              <Text className="text-white mt-3">
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white mt-3">
                 {isCapturing ? '照片處理中…' : '點一下拍照'}
               </Text>
             </View>

@@ -282,16 +282,16 @@ export default function FunctionMenuScreen() {
 
       {error ? (
         <View className="bg-error/10 p-4 m-4 rounded-lg">
-          <Text className="text-error font-semibold mb-2">
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold mb-2">
             錯誤
           </Text>
 
-          <Text className="text-error text-sm">
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm">
             {error}
           </Text>
 
           {currentUrl ? (
-            <Text className="text-error text-sm mt-2">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm mt-2">
               {currentUrl}
             </Text>
           ) : null}
@@ -383,7 +383,7 @@ export default function FunctionMenuScreen() {
                 size="large"
               />
 
-              <Text className="text-muted mt-3">
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted mt-3">
                 功能選單載入中...
               </Text>
             </View>
@@ -395,7 +395,7 @@ export default function FunctionMenuScreen() {
             size="large"
           />
 
-          <Text className="text-muted mt-3">
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted mt-3">
             功能選單載入中...
           </Text>
         </View>

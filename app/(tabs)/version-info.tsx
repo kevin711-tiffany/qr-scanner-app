@@ -77,7 +77,7 @@ export default function VersionInfoScreen() {
           }}
           style={({ pressed }) => [{ opacity: pressed ? 0.65 : 1 }]}
         >
-          <Text className="text-primary font-semibold">返回設定</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">返回設定</Text>
         </Pressable>
       </AppHeader>
 
@@ -91,11 +91,11 @@ export default function VersionInfoScreen() {
         <View className="gap-6">
           {/* 頁面標題 */}
           <View>
-            <Text className="text-2xl font-bold text-foreground mb-2">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-2xl font-bold text-foreground mb-2">
               版本資訊
             </Text>
 
-            <Text className="text-muted text-sm">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-sm">
               關於本程式
             </Text>
           </View>
@@ -141,7 +141,7 @@ export default function VersionInfoScreen() {
 
           {/* 開發人員模式點擊提示 */}
           {!showDeveloperInfo && versionTapCount > 0 && (
-            <Text className="text-muted text-xs text-center">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs text-center">
               再點擊版本 {remainingTapCount} 次，即可顯示開發資訊
             </Text>
           )}
@@ -149,7 +149,7 @@ export default function VersionInfoScreen() {
           {/* 僅在開發人員模式啟用後顯示 */}
           {showDeveloperInfo && (
             <View className="bg-surface border border-border rounded-xl p-4">
-              <Text className="text-lg font-bold text-foreground mb-3">
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-lg font-bold text-foreground mb-3">
                 Version {VERSION_INFO.version} 更新內容
               </Text>
 
@@ -159,11 +159,11 @@ export default function VersionInfoScreen() {
                     key={item}
                     className="flex-row"
                   >
-                    <Text className="text-primary font-bold mr-2">
+                    <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-bold mr-2">
                       •
                     </Text>
 
-                    <Text className="text-foreground flex-1 leading-6">
+                    <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground flex-1 leading-6">
                       {item}
                     </Text>
                   </View>
@@ -172,7 +172,7 @@ export default function VersionInfoScreen() {
             </View>
           )}
 
-          <Text className="text-muted text-xs text-center">
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs text-center">
             © 2026 禾詰企業物料管理
           </Text>
         </View>
@@ -196,11 +196,11 @@ function InfoRow({
         isLast ? '' : 'border-b border-border'
       }`}
     >
-      <Text className="text-muted mr-4">
+      <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted mr-4">
         {label}
       </Text>
 
-      <Text className="text-foreground font-semibold flex-1 text-right">
+      <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold flex-1 text-right">
         {value}
       </Text>
     </View>

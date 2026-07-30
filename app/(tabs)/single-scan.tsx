@@ -149,8 +149,8 @@ export default function SingleScanScreen() {
 
         {webViewData.error ? (
           <View className="bg-error/10 p-4 m-4 rounded-lg">
-            <Text className="text-error font-semibold mb-2">錯誤</Text>
-            <Text className="text-error text-sm">{webViewData.error}</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold mb-2">錯誤</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm">{webViewData.error}</Text>
           </View>
         ) : (
           <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
@@ -165,8 +165,8 @@ export default function SingleScanScreen() {
       <ScreenContainer>
         <AppHeader />
         <View className="flex-1 items-center justify-center p-6">
-          <Text className="text-foreground text-lg font-bold mb-2">已在瀏覽器開啟網頁</Text>
-          <Text className="text-muted text-center text-sm mb-6" numberOfLines={3}>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-lg font-bold mb-2">已在瀏覽器開啟網頁</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-center text-sm mb-6" numberOfLines={3}>
             {openedUrl}
           </Text>
           <Pressable
@@ -176,7 +176,7 @@ export default function SingleScanScreen() {
             }}
             className="bg-primary rounded-lg px-6 py-4"
           >
-            <Text className="text-white font-bold">繼續掃描</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">繼續掃描</Text>
           </Pressable>
         </View>
       </ScreenContainer>
@@ -186,9 +186,9 @@ export default function SingleScanScreen() {
   if (!permission) {
     return (
       <ScreenContainer className="items-center justify-center p-4">
-        <Text className="text-foreground text-center mb-4">需要相機權限</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-center mb-4">需要相機權限</Text>
         <Pressable onPress={requestPermission} className="bg-primary rounded-lg p-4">
-          <Text className="text-white font-bold">授予權限</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">授予權限</Text>
         </Pressable>
       </ScreenContainer>
     );
@@ -197,9 +197,9 @@ export default function SingleScanScreen() {
   if (!permission.granted) {
     return (
       <ScreenContainer className="items-center justify-center p-4">
-        <Text className="text-foreground text-center mb-4">相機權限被拒絕</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-center mb-4">相機權限被拒絕</Text>
         <Pressable onPress={requestPermission} className="bg-primary rounded-lg p-4">
-          <Text className="text-white font-bold">重新請求權限</Text>
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">重新請求權限</Text>
         </Pressable>
       </ScreenContainer>
     );
@@ -224,14 +224,14 @@ export default function SingleScanScreen() {
             />
           ) : (
             <View className="flex-1 items-center justify-center">
-              <Text className="text-white/70">相機已暫停</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white/70">相機已暫停</Text>
             </View>
           )}
 
           {/* 掃描框 */}
           <View className="absolute inset-0 items-center justify-center pointer-events-none">
             <View className="w-64 h-64 border-4 border-primary rounded-lg" />
-            <Text className="text-white mt-4 text-center">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white mt-4 text-center">
               對準 QR Code，掃描後立即傳送
             </Text>
           </View>
@@ -239,7 +239,7 @@ export default function SingleScanScreen() {
           {/* 錯誤提示橫幅 */}
           {errorText && (
             <View className="absolute top-4 left-4 right-4 px-4 py-2 rounded-lg bg-white/95">
-              <Text className="font-bold text-center text-red-600">{errorText}</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="font-bold text-center text-red-600">{errorText}</Text>
             </View>
           )}
 
@@ -247,14 +247,14 @@ export default function SingleScanScreen() {
           {isSubmitting && (
             <View className="absolute inset-0 bg-black/60 items-center justify-center">
               <ActivityIndicator size="large" color="#ffffff" />
-              <Text className="text-white font-bold text-lg mt-4">傳送中...</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold text-lg mt-4">傳送中...</Text>
             </View>
           )}
         </View>
 
         {/* 說明文字 */}
         <View className="bg-surface border-t border-border p-4">
-          <Text className="text-muted text-center text-sm">
+          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-center text-sm">
             單獨掃描模式：掃描到 QR Code 後會立即自動傳送資料
           </Text>
         </View>

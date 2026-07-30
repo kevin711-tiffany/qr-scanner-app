@@ -219,7 +219,7 @@ export default function SettingsScreen() {
   if (isLoading) {
     return (
       <ScreenContainer className="items-center justify-center">
-        <Text className="text-foreground">載入中...</Text>
+        <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground">載入中...</Text>
       </ScreenContainer>
     );
   }
@@ -234,7 +234,7 @@ export default function SettingsScreen() {
               onPress={() => setShowScanner(false)}
               style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }]}
             >
-              <Text className="text-primary font-semibold">返回設定</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">返回設定</Text>
             </Pressable>
           </AppHeader>
           <View className="flex-1 relative bg-black">
@@ -245,7 +245,7 @@ export default function SettingsScreen() {
             />
             <View className="absolute inset-0 items-center justify-center pointer-events-none">
               <View className="w-64 h-64 border-4 border-primary rounded-lg" />
-              <Text className="text-white mt-4 text-center">對準設定用 QR Code</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white mt-4 text-center">對準設定用 QR Code</Text>
             </View>
           </View>
           <View className="p-4 bg-surface border-t border-border">
@@ -254,7 +254,7 @@ export default function SettingsScreen() {
               style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
               className="bg-error/20 rounded-lg p-4 items-center"
             >
-              <Text className="text-error font-semibold">取消掃描</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold">取消掃描</Text>
             </Pressable>
           </View>
         </View>
@@ -269,8 +269,8 @@ export default function SettingsScreen() {
 
         {webViewData.error ? (
           <View className="bg-error/10 p-4 m-4 rounded-lg">
-            <Text className="text-error font-semibold mb-2">錯誤</Text>
-            <Text className="text-error text-sm">{webViewData.error}</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error font-semibold mb-2">錯誤</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-error text-sm">{webViewData.error}</Text>
           </View>
         ) : (
           <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
@@ -286,8 +286,8 @@ export default function SettingsScreen() {
         <View className="gap-6">
           {/* 標題 */}
           <View>
-            <Text className="text-2xl font-bold text-foreground mb-2">基本資料設定</Text>
-            <Text className="text-muted text-sm">設定您的基本資訊和傳送網址</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-2xl font-bold text-foreground mb-2">基本資料設定</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-sm">設定您的基本資訊和傳送網址</Text>
           </View>
 
           {/* 掃描 QR Code 帶入設定 */}
@@ -296,14 +296,14 @@ export default function SettingsScreen() {
             style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
             className="border border-primary rounded-lg p-3 items-center bg-primary/5"
           >
-            <Text className="text-primary font-semibold">掃描 QR Code 帶入設定資料</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">掃描 QR Code 帶入設定資料</Text>
           </Pressable>
 
           {/* 掃描提示音效開關 */}
           <View className="flex-row items-center justify-between bg-surface border border-border rounded-lg p-4">
             <View className="flex-1 mr-3">
-              <Text className="text-foreground font-semibold">掃描提示音效</Text>
-              <Text className="text-muted text-xs mt-1">
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold">掃描提示音效</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">
                 {soundOn ? '掃描成功時播放提示音' : '已關閉，掃描成功時以震動回饋'}
               </Text>
             </View>
@@ -317,8 +317,8 @@ export default function SettingsScreen() {
 
           {/* 代碼 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">代碼（唯讀，由 QR Code 帶入）</Text>
-            <TextInput
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">代碼（唯讀，由 QR Code 帶入）</Text>
+            <TextInput allowFontScaling={false} maxFontSizeMultiplier={1}
               value={settings.code}
               editable={false}
               placeholder="請掃描 QR Code 帶入代碼"
@@ -329,13 +329,13 @@ export default function SettingsScreen() {
                 'bg-border/30 text-muted'
               )}
             />
-            <Text className="text-muted text-xs mt-1">{settings.code.length}/30</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">{settings.code.length}/30</Text>
           </View>
 
           {/* 備註 */}
           <View>
-            <Text className="text-foreground font-semibold mb-2">備註</Text>
-            <TextInput
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">備註</Text>
+            <TextInput allowFontScaling={false} maxFontSizeMultiplier={1}
               value={settings.remark3}
               onChangeText={(value) => updateField('remark3', value.slice(0, 30))}
               placeholder="輸入備註（最多 30 字元）"
@@ -346,7 +346,7 @@ export default function SettingsScreen() {
                 'bg-surface'
               )}
             />
-            <Text className="text-muted text-xs mt-1">{settings.remark3.length}/30</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">{settings.remark3.length}/30</Text>
           </View>
 
           {/* 儲存按鈕 */}
@@ -364,7 +364,7 @@ export default function SettingsScreen() {
               isSaving && 'opacity-60'
             )}
           >
-            <Text className="text-white font-bold text-lg">
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold text-lg">
               {isSaving ? '儲存中...' : '儲存設定'}
             </Text>
           </Pressable>
@@ -378,12 +378,12 @@ export default function SettingsScreen() {
             className="bg-surface border border-border rounded-xl p-4 flex-row items-center justify-between"
           >
             <View className="flex-1 mr-3">
-              <Text className="text-foreground font-semibold">關於本程式</Text>
-              <Text className="text-muted text-xs mt-1">
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold">關於本程式</Text>
+              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">
                 APP 版本：{Constants.expoConfig?.version ?? '未知'}
               </Text>
             </View>
-            <Text className="text-primary text-xl font-semibold">›</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary text-xl font-semibold">›</Text>
           </Pressable>
 
           <View style={{ paddingBottom: 30 }} />
