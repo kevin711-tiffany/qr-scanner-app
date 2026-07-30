@@ -1,4 +1,11 @@
-import { ScrollView, Text, View, Pressable } from 'react-native';
+import {
+  ScrollView,
+  Text,
+  View,
+  Pressable,
+  Linking,
+  Alert,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 
@@ -7,7 +14,12 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColors } from '@/hooks/use-colors';
 import { haptic } from '@/lib/haptics';
 
-type HomeRoute = '/scan' | '/single-scan' | '/query' | '/function-menu' | '/settings';
+type HomeRoute =
+  | '/scan'
+  | '/single-scan'
+  | '/query'
+  | '/function-menu'
+  | '/settings';
 
 /**
  * 首頁：APP 開啟後的預設畫面
@@ -21,6 +33,26 @@ export default function HomeScreen() {
   const goTo = (path: HomeRoute) => {
     haptic.light();
     router.push(path);
+  };
+
+  /**
+   * 使用手機預設瀏覽器開啟外部網站。
+   * 未來若首頁要增加其他網站，只要呼叫 openWebsite() 即可。
+   */
+  const openWebsite = async (url: string) => {
+    haptic.light();
+
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('無法開啟網站', url);
+      }
+    } catch {
+      Alert.alert('開啟失敗', '請稍後再試');
+    }
   };
 
   const menuItems = [
@@ -53,6 +85,12 @@ export default function HomeScreen() {
       title: '資料設定',
       icon: 'gearshape.fill' as const,
       onPress: () => goTo('/settings'),
+    },
+    {
+      key: 'website',
+      title: '禾詰網站',
+      icon: 'globe' as const,
+      onPress: () => openWebsite('https://www.mrcontrol-bike.com/'),
     },
   ];
 
