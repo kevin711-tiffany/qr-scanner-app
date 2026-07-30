@@ -3,7 +3,7 @@
     "name": "禾詰企業物料管理",
     "slug": "qr-scanner-app",
     "owner": "kevin.cjs711",
-    "version": "1.0.24",
+    "version": "1.0.25",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "manusqrscannerapp",
@@ -12,14 +12,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.app.qrscannerapp",
-      "buildNumber": "24",
+      "buildNumber": "25",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.app.qrscannerapp",
-      "versionCode": 24,
+      "versionCode": 25,
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -28,13 +28,24 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "permissions": ["POST_NOTIFICATIONS"],
+      "permissions": [
+        "android.permission.CAMERA",
+        "POST_NOTIFICATIONS"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
           "autoVerify": true,
-          "data": [{ "scheme": "manusqrscannerapp", "host": "*" }],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "data": [
+            {
+              "scheme": "manusqrscannerapp",
+              "host": "*"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -47,11 +58,15 @@
       "expo-router",
       [
         "expo-camera",
-        { "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機來掃描 QR Code。" }
+        {
+          "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機來掃描 QR Code。"
+        }
       ],
       [
         "expo-audio",
-        { "microphonePermission": "允許 $(PRODUCT_NAME) 使用麥克風。" }
+        {
+          "microphonePermission": "允許 $(PRODUCT_NAME) 使用麥克風。"
+        }
       ],
       [
         "expo-video",
@@ -67,14 +82,19 @@
           "imageWidth": 280,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
-          "dark": { "backgroundColor": "#ffffff" }
+          "dark": {
+            "backgroundColor": "#ffffff"
+          }
         }
       ],
       [
         "expo-build-properties",
         {
           "android": {
-            "buildArchs": ["armeabi-v7a", "arm64-v8a"],
+            "buildArchs": [
+              "armeabi-v7a",
+              "arm64-v8a"
+            ],
             "minSdkVersion": 24,
             "usesCleartextTraffic": true
           }
