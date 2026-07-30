@@ -97,11 +97,7 @@ export default function HomeScreen() {
   return (
     <ScreenContainer>
       <ScrollView
-contentContainerStyle={{
-  flexGrow: 1,
-  paddingBottom: 80,
-}}
-contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={{ flexGrow: 1 }}
         className="p-6"
         showsVerticalScrollIndicator={false}
       >
