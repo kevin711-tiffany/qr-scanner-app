@@ -1,11 +1,13 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
 import {
   ActivityIndicator,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -16,14 +18,26 @@ import {
 
 import {
   WebView,
+  type WebViewMessageEvent,
   type WebViewNavigation,
 } from 'react-native-webview';
+
+import Constants from 'expo-constants';
 
 import {
   AppHeader,
 } from '@/components/app-header';
 
+import { NativeCameraModal } from '@/components/native-camera-modal';
+
 import { webViewFileUploadCompatibilityScript } from '@/lib/webview-file-upload';
+import {
+  buildBridgeInfoResultScript,
+  buildCameraResultScript,
+  nativeBridgeBootstrapScript,
+  parseNativeBridgeMessage,
+  type NativeCameraResult,
+} from '@/lib/native-bridge';
 
 
 import {
@@ -58,6 +72,10 @@ type FunctionMenuRequest = {
 };
 
 export default function FunctionMenuScreen() {
+  const webViewRef = useRef<WebView>(null);
+
+  const [cameraVisible, setCameraVisible] = useState(false);
+  const [cameraRequestId, setCameraRequestId] = useState<string | undefined>();
   const {
     getStoredSettings,
   } = useBasicSettings();
@@ -194,6 +212,57 @@ export default function FunctionMenuScreen() {
     ])
   );
 
+  const handleBridgeMessage = useCallback((event: WebViewMessageEvent) => {
+    const message = parseNativeBridgeMessage(event.nativeEvent.data);
+
+    if (!message) return;
+
+    switch (message.action) {
+      case 'camera':
+        setCameraRequestId(message.requestId);
+        setCameraVisible(true);
+        break;
+
+      case 'version':
+        webViewRef.current?.injectJavaScript(
+          buildBridgeInfoResultScript('hojie:version-result', {
+            requestId: message.requestId,
+            version: Constants.expoConfig?.version ?? 'unknown',
+          })
+        );
+        break;
+
+      case 'platform':
+        webViewRef.current?.injectJavaScript(
+          buildBridgeInfoResultScript('hojie:platform-result', {
+            requestId: message.requestId,
+            platform: Platform.OS,
+          })
+        );
+        break;
+
+      default:
+        webViewRef.current?.injectJavaScript(
+          buildBridgeInfoResultScript('hojie:bridge-error', {
+            requestId: message.requestId,
+            action: message.action,
+            message: `目前版本尚未啟用 ${message.action} 功能`,
+          })
+        );
+    }
+  }, []);
+
+  const handleCameraCaptured = useCallback((result: NativeCameraResult) => {
+    setCameraVisible(false);
+    setCameraRequestId(undefined);
+    webViewRef.current?.injectJavaScript(buildCameraResultScript(result));
+  }, []);
+
+  const handleCameraCancel = useCallback(() => {
+    setCameraVisible(false);
+    setCameraRequestId(undefined);
+  }, []);
+
   const handleNavigationChange =
     useCallback(
       (
@@ -230,6 +299,7 @@ export default function FunctionMenuScreen() {
       ) : request ? (
         <View className="flex-1 bg-white overflow-hidden">
           <WebView
+            ref={webViewRef}
             /*
              * reloadKey 改變時重新建立 WebView，
              * 確保 POST 請求與網頁瀏覽紀錄完整重置。
@@ -250,9 +320,12 @@ export default function FunctionMenuScreen() {
               false
             }
             mixedContentMode="always"
-            injectedJavaScriptBeforeContentLoaded={
-              webViewFileUploadCompatibilityScript
-            }
+            injectedJavaScriptBeforeContentLoaded={`
+              ${nativeBridgeBootstrapScript}
+              ${webViewFileUploadCompatibilityScript ?? ''}
+              true;
+            `}
+            onMessage={handleBridgeMessage}
             onNavigationStateChange={
               handleNavigationChange
             }
@@ -327,6 +400,13 @@ export default function FunctionMenuScreen() {
           </Text>
         </View>
       )}
+
+      <NativeCameraModal
+        visible={cameraVisible}
+        requestId={cameraRequestId}
+        onCancel={handleCameraCancel}
+        onCaptured={handleCameraCaptured}
+      />
     </ScreenContainer>
   );
 }

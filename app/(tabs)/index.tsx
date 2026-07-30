@@ -93,8 +93,18 @@ export default function HomeScreen() {
                 ]}
               >
                 <View className="min-h-32 items-center justify-center bg-surface border border-border rounded-2xl px-3 py-5">
-                  <View className="w-14 h-14 rounded-2xl bg-primary/10 items-center justify-center mb-3">
-                    <IconSymbol size={32} name={item.icon} color={colors.primary} />
+                  <View
+                    className="rounded-2xl bg-primary/10 items-center justify-center mb-3"
+                    style={{
+                      width: 72,
+                      height: 72,
+                    }}
+                  >
+                    <IconSymbol
+                      size={44}
+                      name={item.icon}
+                      color={colors.primary}
+                    />
                   </View>
                   <Text className="text-foreground text-lg font-semibold text-center">
                     {item.title}

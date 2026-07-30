@@ -61,7 +61,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機來掃描 QR Code。"
+          "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機掃描 QR Code及拍攝物料照片。"
         }
       ],
       [
