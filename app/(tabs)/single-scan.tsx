@@ -153,10 +153,7 @@ export default function SingleScanScreen() {
             <Text className="text-error text-sm">{webViewData.error}</Text>
           </View>
         ) : (
-          <HtmlResponseView
-            html={webViewData.content}
-            baseUrl={webViewData.url}
-          />
+          <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
         )}
       </ScreenContainer>
     );

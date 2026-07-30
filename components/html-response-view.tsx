@@ -1,7 +1,7 @@
 import { Platform, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT } from '@/lib/webview-file-upload';
+import { webViewFileUploadCompatibilityScript } from '@/lib/webview-file-upload';
 
 interface HtmlResponseViewProps {
   html: string;
@@ -93,16 +93,7 @@ export function HtmlResponseView({ html, baseUrl }: HtmlResponseViewProps) {
         mixedContentMode="always"
         setSupportMultipleWindows={false}
         allowsBackForwardNavigationGestures
-        injectedJavaScriptBeforeContentLoaded={
-          Platform.OS === 'android'
-            ? ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT
-            : undefined
-        }
-        injectedJavaScript={
-          Platform.OS === 'android'
-            ? ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT
-            : undefined
-        }
+        injectedJavaScriptBeforeContentLoaded={webViewFileUploadCompatibilityScript}
       />
     </View>
   );

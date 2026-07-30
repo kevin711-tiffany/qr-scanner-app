@@ -1,64 +1,54 @@
+import { Platform } from 'react-native';
+
 /**
- * Android WebView 在部分品牌手機上，遇到
- * <input type="file" accept="image/*" capture="environment">
- * 會直接嘗試啟動指定相機，但相機 Activity 無法正確回傳結果，
- * 造成點擊後沒有反應。
+ * Android WebView 對 <input type="file" capture="environment"> 的處理，
+ * 在部分品牌／Android 版本會無法開啟相機。
  *
- * 移除 capture 屬性後，Android 會改由系統檔案選擇器處理，
- * 使用者仍可選擇「相機」拍照，同時也保留相簿選擇功能，
- * 相容性會比強制指定 environment 相機更好。
- *
- * MutationObserver 會處理 AJAX 後才加入頁面的 file input。
+ * Android 端移除 capture 屬性，交由系統檔案選擇器提供「相機／相簿」選項，
+ * 可提高不同裝置的相容性；iOS 保留原始 capture 行為。
  */
-export const ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT = `
+const ANDROID_FILE_INPUT_COMPATIBILITY_SCRIPT = `
 (function () {
-  function normalizeFileInputs(root) {
-    var scope = root && root.querySelectorAll ? root : document;
-    var inputs = scope.querySelectorAll('input[type="file"]');
+  function normalizeFileInput(input) {
+    if (!input || input.tagName !== 'INPUT' || input.type !== 'file') {
+      return;
+    }
 
-    for (var i = 0; i < inputs.length; i += 1) {
-      var input = inputs[i];
+    if (input.hasAttribute('capture')) {
+      input.removeAttribute('capture');
+    }
 
-      if (input.hasAttribute('capture')) {
-        input.setAttribute(
-          'data-original-capture',
-          input.getAttribute('capture') || ''
-        );
-        input.removeAttribute('capture');
-      }
-
-      if (!input.getAttribute('accept')) {
-        input.setAttribute('accept', 'image/*');
-      }
+    if (!input.getAttribute('accept')) {
+      input.setAttribute('accept', 'image/*');
     }
   }
 
-  function start() {
-    normalizeFileInputs(document);
+  function normalizeAllFileInputs(root) {
+    if (!root || !root.querySelectorAll) {
+      return;
+    }
 
-    if (!document.documentElement || !window.MutationObserver) {
+    root.querySelectorAll('input[type="file"]').forEach(normalizeFileInput);
+  }
+
+  function start() {
+    normalizeAllFileInputs(document);
+
+    if (!document.documentElement || typeof MutationObserver === 'undefined') {
       return;
     }
 
     var observer = new MutationObserver(function (mutations) {
-      for (var i = 0; i < mutations.length; i += 1) {
-        var addedNodes = mutations[i].addedNodes;
-
-        for (var j = 0; j < addedNodes.length; j += 1) {
-          var node = addedNodes[j];
-
-          if (node && node.nodeType === 1) {
-            if (
-              node.matches &&
-              node.matches('input[type="file"]')
-            ) {
-              normalizeFileInputs(node.parentNode || document);
-            } else {
-              normalizeFileInputs(node);
-            }
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (!node || node.nodeType !== 1) {
+            return;
           }
-        }
-      }
+
+          normalizeFileInput(node);
+          normalizeAllFileInputs(node);
+        });
+      });
     });
 
     observer.observe(document.documentElement, {
@@ -72,6 +62,10 @@ export const ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT = `
   } else {
     start();
   }
+
+  true;
 })();
-true;
 `;
+
+export const webViewFileUploadCompatibilityScript =
+  Platform.OS === 'android' ? ANDROID_FILE_INPUT_COMPATIBILITY_SCRIPT : undefined;

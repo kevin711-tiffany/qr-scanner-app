@@ -6,7 +6,6 @@ import {
 
 import {
   ActivityIndicator,
-  Platform,
   Text,
   View,
 } from 'react-native';
@@ -20,11 +19,12 @@ import {
   type WebViewNavigation,
 } from 'react-native-webview';
 
-import { ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT } from '@/lib/webview-file-upload';
-
 import {
   AppHeader,
 } from '@/components/app-header';
+
+import { webViewFileUploadCompatibilityScript } from '@/lib/webview-file-upload';
+
 
 import {
   ScreenContainer,
@@ -251,14 +251,7 @@ export default function FunctionMenuScreen() {
             }
             mixedContentMode="always"
             injectedJavaScriptBeforeContentLoaded={
-              Platform.OS === 'android'
-                ? ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT
-                : undefined
-            }
-            injectedJavaScript={
-              Platform.OS === 'android'
-                ? ANDROID_FILE_UPLOAD_COMPATIBILITY_SCRIPT
-                : undefined
+              webViewFileUploadCompatibilityScript
             }
             onNavigationStateChange={
               handleNavigationChange
