@@ -29,7 +29,6 @@ type HomeRoute =
 export default function HomeScreen() {
   const router = useRouter();
   const colors = useColors();
-
   const goTo = (path: HomeRoute) => {
     haptic.light();
     router.push(path);

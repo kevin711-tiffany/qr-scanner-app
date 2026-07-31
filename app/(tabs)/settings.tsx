@@ -1,6 +1,7 @@
-import { ScrollView, Text, View, TextInput, Pressable, Alert, Switch } from 'react-native';
+import { ScrollView, Text, View, Pressable, Alert, Switch } from 'react-native';
 import { useState, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Image } from 'expo-image';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import { useTabReset } from '@/hooks/use-tab-reset';
 import { cn } from '@/lib/utils';
 import { haptic } from '@/lib/haptics';
 import { getSoundEnabled, setSoundEnabled, playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
+import { decryptSettingsQr } from '@/lib/qr-setting-crypto';
 
 // 解析掃描到的 QR Code 內容，支援兩種格式：
 // 1. JSON 格式：{"code":"A01","sendUrl":"http://...","remark1":"...","remark2":"...","remark3":"..."}
@@ -82,6 +84,7 @@ export default function SettingsScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const scanLockRef = useRef(false);
   const [soundOn, setSoundOn] = useState(true);
+  const isConfigured = settings.code.trim() !== '';
 
   // 每次進入設定分頁時重置回基本資料表單畫面（不停留在上次的傳送結果或掃描頁）
   useFocusEffect(
@@ -127,25 +130,35 @@ export default function SettingsScreen() {
     if (scanLockRef.current) return;
     scanLockRef.current = true;
 
-    const parsed = parseSettingsQr(result.data ?? '');
     setShowScanner(false);
 
-    if (!parsed) {
+    try {
+      const decryptedText = decryptSettingsQr(result.data ?? '');
+      const parsed = parseSettingsQr(decryptedText);
+
+      if (!parsed) {
+        throw new Error('解密後的設定資料格式錯誤');
+      }
+
+      // 加密 QR Code 只寫入 code、sendUrl、remark1、remark2；remark3 保留原設定。
+      const importedSettings = {
+        ...settings,
+        code: parsed.code,
+        sendUrl: parsed.sendUrl,
+        remark1: parsed.remark1,
+        remark2: parsed.remark2,
+      };
+
+      applyFields(importedSettings);
+      playScanSuccessFeedback();
+      void performSave(importedSettings);
+    } catch (error) {
       haptic.error();
       Alert.alert(
         '格式錯誤',
-        '無法解析此 QR Code。支援格式：\n1. JSON：{"code":"...","sendUrl":"...","remark1":"..."}\n2. 分隔格式：代碼;傳送網址;備註一;備註二;備註三\n3. 純網址（只帶入傳送網址）'
+        error instanceof Error ? error.message : '無法讀取此設定 QR Code'
       );
-      return;
     }
-
-    applyFields(parsed);
-    // 播放掃描成功提示音（音效關閉時以震動回饋）
-    playScanSuccessFeedback();
-    // 完全以掃描到的最新資料為準（含空字串欄位一併清空舊資料），
-    // 直接自動執行儲存流程（不彈出確認視窗），
-    // 並將資料傳送到指定網址、顯示伺服器回應網頁
-    void performSave(parsed);
   };
 
   // 儲存前驗證網址是否可連線（任何 HTTP 回應皆視為可連線，僅網路層錯誤視為失敗）
@@ -315,42 +328,39 @@ export default function SettingsScreen() {
             />
           </View>
 
-          {/* 代碼 */}
-          <View>
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">代碼（唯讀，由 QR Code 帶入）</Text>
-            <TextInput
-              allowFontScaling={false}
-              maxFontSizeMultiplier={1}
-              value={settings.code}
-              editable={false}
-              placeholder="請掃描 QR Code 帶入代碼"
-              placeholderTextColor="#999"
-              maxLength={30}
-              className={cn(
-                'border border-border rounded-lg p-3',
-                'bg-border/30 text-muted'
-              )}
-            />
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">{settings.code.length}/30</Text>
-          </View>
+          {/* code 與備註欄位已隱藏，資料仍保留並照常傳送。 */}
 
-          {/* 備註 */}
-          <View>
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold mb-2">備註</Text>
-            <TextInput
+          {/* 設定狀態：放在儲存按鈕上方 */}
+          <View className="items-center bg-surface border border-border rounded-2xl p-5">
+            <Image
+              source={
+                isConfigured
+                  ? require('@/assets/images/unlock1.jpg')
+                  : require('@/assets/images/lock1.jpg')
+              }
+              style={{ width: 190, height: 190 }}
+              contentFit="contain"
+            />
+
+            <Text
               allowFontScaling={false}
               maxFontSizeMultiplier={1}
-              value={settings.remark3}
-              onChangeText={(value) => updateField('remark3', value.slice(0, 30))}
-              placeholder="輸入備註（最多 30 字元）"
-              placeholderTextColor="#999"
-              maxLength={30}
-              className={cn(
-                'border border-border rounded-lg p-3 text-foreground',
-                'bg-surface'
-              )}
-            />
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs mt-1">{settings.remark3.length}/30</Text>
+              className="text-foreground text-lg font-semibold mt-3 text-center"
+            >
+              {isConfigured
+                ? '設定已完成'
+                : '尚未使用 QR Code 進行設定'}
+            </Text>
+
+            <Text
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
+              className="text-muted text-sm mt-2 text-center"
+            >
+              {isConfigured
+                ? '設定資料已成功帶入'
+                : '請掃描設定用 QR Code'}
+            </Text>
           </View>
 
           {/* 儲存按鈕 */}
