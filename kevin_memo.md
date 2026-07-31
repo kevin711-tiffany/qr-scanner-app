@@ -35,7 +35,7 @@ git status
 
 # 7. 提交 GitHub
 git add .
-git commit -m "說明本次修改內容"
+git commit -m "QR CODE加密"弓
 git push
 
 # 8. 建立 Preview APK
