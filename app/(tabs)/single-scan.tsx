@@ -1,8 +1,7 @@
-import { Text, View, Pressable, ActivityIndicator, Platform } from 'react-native';
+import { Text, View, Pressable, ActivityIndicator } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import * as Linking from 'expo-linking';
 import { ScreenContainer } from '@/components/screen-container';
 import { AppHeader } from '@/components/app-header';
 import { HtmlResponseView } from '@/components/html-response-view';
@@ -15,8 +14,7 @@ import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
 /**
  * 單獨掃描分頁：掃描到單一 QR Code 後立即自動傳送（usetype=D），
  * 不需按任何按鈕，傳送完成後直接顯示伺服器回應結果。
- * 若掃描到的內容是網址（http/https），傳送成功後會用手機的預設瀏覽器
- * （開新視窗）開啟該網址，而不是在 App 內顯示。
+ * 不論掃描內容為文字或網址，都交由 PHP 處理並顯示伺服器回應結果。
  */
 export default function SingleScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -27,7 +25,6 @@ export default function SingleScanScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showWebView, setShowWebView] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
-  const [openedUrl, setOpenedUrl] = useState<string | null>(null);
   // 防止相機連續觸發掃描事件造成重複送出
   const processingRef = useRef(false);
 
@@ -37,7 +34,6 @@ export default function SingleScanScreen() {
       setShowWebView(false);
       setIsSubmitting(false);
       setErrorText(null);
-      setOpenedUrl(null);
       processingRef.current = false;
       // 重新載入已儲存設定，確保拿到設定頁最新儲存的傳送網址
       loadSettings();
@@ -49,7 +45,6 @@ export default function SingleScanScreen() {
     setShowWebView(false);
     setIsSubmitting(false);
     setErrorText(null);
-    setOpenedUrl(null);
     processingRef.current = false;
     loadSettings();
   });
@@ -108,20 +103,9 @@ export default function SingleScanScreen() {
 
       if (success) {
         haptic.success();
-        // 若掃描到的內容是網址：用手機的預設瀏覽器開啟（開新視窗），
-        // 不在 App 內的 WebView 顯示
-        if (/^https?:\/\//i.test(scannedValue)) {
-          setOpenedUrl(scannedValue);
-          try {
-            await Linking.openURL(scannedValue);
-          } catch {
-            // 無法開啟（例如裝置沒有瀏覽器）時退回 App 內顯示伺服器回應
-            setOpenedUrl(null);
-            setShowWebView(true);
-          }
-        } else {
-          setShowWebView(true);
-        }
+        // 不在 App 端判斷 scannedData 是否為網址，統一顯示 PHP 回傳內容。
+        // 若 PHP 判斷為網址，可在回傳 HTML 中輸出可點擊連結。
+        setShowWebView(true);
       } else {
         haptic.error();
         setErrorText('無法連接到指定網址');
@@ -155,30 +139,6 @@ export default function SingleScanScreen() {
         ) : (
           <HtmlResponseView html={webViewData.content} baseUrl={webViewData.url} />
         )}
-      </ScreenContainer>
-    );
-  }
-
-  // 已用預設瀏覽器開啟掃描到的網址：顯示提示畫面，可再掃下一筆
-  if (openedUrl) {
-    return (
-      <ScreenContainer>
-        <AppHeader />
-        <View className="flex-1 items-center justify-center p-6">
-          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground text-lg font-bold mb-2">已在瀏覽器開啟網頁</Text>
-          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-center text-sm mb-6" numberOfLines={3}>
-            {openedUrl}
-          </Text>
-          <Pressable
-            onPress={() => {
-              setOpenedUrl(null);
-              processingRef.current = false;
-            }}
-            className="bg-primary rounded-lg px-6 py-4"
-          >
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-white font-bold">繼續掃描</Text>
-          </Pressable>
-        </View>
       </ScreenContainer>
     );
   }
