@@ -12,12 +12,15 @@ const DEVELOPER_TAP_COUNT = 5;
 const TAP_RESET_DELAY_MS = 3000;
 
 export default function VersionInfoScreen() {
-  const runtimeVersion = Constants.expoConfig?.version ?? VERSION_INFO.version;
+  const runtimeVersion =
+    Constants.expoConfig?.version ?? VERSION_INFO.version;
 
   const [versionTapCount, setVersionTapCount] = useState(0);
   const [showDeveloperInfo, setShowDeveloperInfo] = useState(false);
 
-  const tapResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tapResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   useEffect(() => {
     return () => {
@@ -56,7 +59,10 @@ export default function VersionInfoScreen() {
       setShowDeveloperInfo(true);
 
       haptic.success();
-      Alert.alert('開發人員模式', '已顯示本版本的開發資訊。');
+      Alert.alert(
+        '開發人員模式',
+        '已顯示本版本的開發資訊。'
+      );
       return;
     }
 
@@ -65,7 +71,8 @@ export default function VersionInfoScreen() {
     haptic.light();
   };
 
-  const remainingTapCount = DEVELOPER_TAP_COUNT - versionTapCount;
+  const remainingTapCount =
+    DEVELOPER_TAP_COUNT - versionTapCount;
 
   return (
     <ScreenContainer>
@@ -75,9 +82,19 @@ export default function VersionInfoScreen() {
             haptic.light();
             router.back();
           }}
-          style={({ pressed }) => [{ opacity: pressed ? 0.65 : 1 }]}
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? 0.65 : 1,
+            },
+          ]}
         >
-          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">返回設定</Text>
+          <Text
+            allowFontScaling={false}
+            maxFontSizeMultiplier={1}
+            className="text-primary font-semibold"
+          >
+            返回設定
+          </Text>
         </Pressable>
       </AppHeader>
 
@@ -91,11 +108,19 @@ export default function VersionInfoScreen() {
         <View className="gap-6">
           {/* 頁面標題 */}
           <View>
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-2xl font-bold text-foreground mb-2">
+            <Text
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
+              className="text-2xl font-bold text-foreground mb-2"
+            >
               版本資訊
             </Text>
 
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-sm">
+            <Text
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
+              className="text-muted text-sm"
+            >
               關於本程式
             </Text>
           </View>
@@ -129,7 +154,9 @@ export default function VersionInfoScreen() {
 
             <InfoRow
               label="Android Build"
-              value={String(VERSION_INFO.androidVersionCode)}
+              value={String(
+                VERSION_INFO.androidVersionCode
+              )}
             />
 
             <InfoRow
@@ -141,7 +168,11 @@ export default function VersionInfoScreen() {
 
           {/* 開發人員模式點擊提示 */}
           {!showDeveloperInfo && versionTapCount > 0 && (
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs text-center">
+            <Text
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1}
+              className="text-muted text-xs text-center"
+            >
               再點擊版本 {remainingTapCount} 次，即可顯示開發資訊
             </Text>
           )}
@@ -149,7 +180,11 @@ export default function VersionInfoScreen() {
           {/* 僅在開發人員模式啟用後顯示 */}
           {showDeveloperInfo && (
             <View className="bg-surface border border-border rounded-xl p-4">
-              <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-lg font-bold text-foreground mb-3">
+              <Text
+                allowFontScaling={false}
+                maxFontSizeMultiplier={1}
+                className="text-lg font-bold text-foreground mb-3"
+              >
                 Version {VERSION_INFO.version} 更新內容
               </Text>
 
@@ -159,11 +194,19 @@ export default function VersionInfoScreen() {
                     key={item}
                     className="flex-row"
                   >
-                    <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-bold mr-2">
-                      •
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1}
+                      className="text-primary font-bold mr-2"
+                    >
+                      ‧
                     </Text>
 
-                    <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground flex-1 leading-6">
+                    <Text
+                      allowFontScaling={false}
+                      maxFontSizeMultiplier={1}
+                      className="text-foreground flex-1 leading-6"
+                    >
                       {item}
                     </Text>
                   </View>
@@ -172,9 +215,13 @@ export default function VersionInfoScreen() {
             </View>
           )}
 
-          <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-xs text-center">
-            © 2026 禾詰企業物料管理
-          </Text>
+<Text
+  allowFontScaling={false}
+  maxFontSizeMultiplier={1}
+  className="text-muted text-xs text-center"
+>
+  © 2026 禾詰企業有限公司
+</Text>
         </View>
       </ScrollView>
     </ScreenContainer>
@@ -196,11 +243,19 @@ function InfoRow({
         isLast ? '' : 'border-b border-border'
       }`}
     >
-      <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted mr-4">
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1}
+        className="text-muted mr-4"
+      >
         {label}
       </Text>
 
-      <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-foreground font-semibold flex-1 text-right">
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1}
+        className="text-foreground font-semibold flex-1 text-right"
+      >
         {value}
       </Text>
     </View>
