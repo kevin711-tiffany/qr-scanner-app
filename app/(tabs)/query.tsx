@@ -119,7 +119,10 @@ export default function QueryScreen() {
         haptic.success();
         setShowWebView(true);
       } else {
-        Alert.alert('錯誤', '無法連接到指定網址');
+        Alert.alert(
+          '無法連線到設定的伺服器',
+          '請確認：\n• Wi-Fi 或行動網路是否正常\n• 伺服器目前可能己下班，請於上班時間再連線'
+        );
         haptic.error();
       }
     } catch (error) {

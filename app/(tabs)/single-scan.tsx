@@ -1,4 +1,4 @@
-import { Text, View, Pressable, ActivityIndicator } from 'react-native';
+import { Text, View, Pressable, ActivityIndicator, Platform } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
@@ -14,7 +14,7 @@ import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
 /**
  * 單獨掃描分頁：掃描到單一 QR Code 後立即自動傳送（usetype=D），
  * 不需按任何按鈕，傳送完成後直接顯示伺服器回應結果。
- * 不論掃描內容為文字或網址，都交由 PHP 處理並顯示伺服器回應結果。
+ * 不論掃描內容為網址或一般資料，皆由 PHP 統一處理並顯示伺服器回應。
  */
 export default function SingleScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -103,12 +103,12 @@ export default function SingleScanScreen() {
 
       if (success) {
         haptic.success();
-        // 不在 App 端判斷 scannedData 是否為網址，統一顯示 PHP 回傳內容。
-        // 若 PHP 判斷為網址，可在回傳 HTML 中輸出可點擊連結。
         setShowWebView(true);
       } else {
         haptic.error();
-        setErrorText('無法連接到指定網址');
+        setErrorText(
+          '無法連線到設定的伺服器\n\n請確認：\n• Wi-Fi 或行動網路是否正常\n• 伺服器目前可能己下班，請於上班時間再連線'
+        );
         setTimeout(() => {
           setErrorText(null);
           processingRef.current = false;

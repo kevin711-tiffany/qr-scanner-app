@@ -190,7 +190,10 @@ export default function SettingsScreen() {
       // 步驟 1：先驗證網址是否可連線，不可連線則不儲存
       const reachable = await checkUrlReachable(target.sendUrl);
       if (!reachable) {
-        Alert.alert('錯誤', '設定的網址無法連結，請重新確認');
+        Alert.alert(
+          '無法連線到設定的伺服器',
+          '請確認：\n• Wi-Fi 或行動網路是否正常\n• 伺服器目前可能己下班，請於上班時間再連線'
+        );
         haptic.error();
         return;
       }
@@ -215,7 +218,10 @@ export default function SettingsScreen() {
         haptic.success();
         setShowWebView(true);
       } else {
-        Alert.alert('錯誤', '設定的網址無法連結，請重新確認');
+        Alert.alert(
+          '無法連線到設定的伺服器',
+          '請確認：\n• Wi-Fi 或行動網路是否正常\n• 伺服器目前可能己下班，請於上班時間再連線'
+        );
         haptic.error();
       }
     } catch (error) {

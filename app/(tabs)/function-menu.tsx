@@ -369,8 +369,7 @@ export default function FunctionMenuScreen() {
               );
 
               setError(
-                nativeEvent.description ||
-                  '功能選單網頁載入失敗'
+                '無法連線到設定的伺服器\n\n請確認：\n• Wi-Fi 或行動網路是否正常\n• 伺服器目前可能己下班，請於上班時間再連線'
               );
 
               setIsLoading(false);
