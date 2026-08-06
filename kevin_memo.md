@@ -7,6 +7,7 @@ pnpm check
 pnpm exec expo export --platform android --clear
 # 2-1.手機EXPO測試
 npx expo start --tunnel --clear
+pnpm exec expo start --tunnel --clear
 
 # 3. 確認有哪些檔案被修改
 git status
