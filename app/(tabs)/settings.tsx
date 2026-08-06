@@ -306,7 +306,6 @@ export default function SettingsScreen() {
           {/* 標題 */}
           <View>
             <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-2xl font-bold text-foreground mb-2">基本資料設定</Text>
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-muted text-sm">設定您的基本資訊和傳送網址</Text>
           </View>
 
           {/* 掃描 QR Code 帶入設定 */}
@@ -315,7 +314,7 @@ export default function SettingsScreen() {
             style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}
             className="border border-primary rounded-lg p-3 items-center bg-primary/5"
           >
-            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">掃描 QR Code 帶入設定資料</Text>
+            <Text allowFontScaling={false} maxFontSizeMultiplier={1} className="text-primary font-semibold">掃描 QR Code 設定資料</Text>
           </Pressable>
 
           {/* 掃描提示音效開關 */}
@@ -358,15 +357,15 @@ export default function SettingsScreen() {
                 : '尚未使用 QR Code 進行設定'}
             </Text>
 
-            <Text
-              allowFontScaling={false}
-              maxFontSizeMultiplier={1}
-              className="text-muted text-sm mt-2 text-center"
-            >
-              {isConfigured
-                ? '設定資料已成功帶入'
-                : '請掃描設定用 QR Code'}
-            </Text>
+            {!isConfigured && (
+              <Text
+                allowFontScaling={false}
+                maxFontSizeMultiplier={1}
+                className="text-muted text-sm mt-2 text-center"
+              >
+                請掃描設定用 QR Code
+              </Text>
+            )}
           </View>
 
           {/* 儲存按鈕 */}
