@@ -15,8 +15,8 @@
       "buildNumber": "25",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "允許禾詰企業物料管理使用相機掃描 QR Code 及拍攝物料照片。",
-        "NSPhotoLibraryUsageDescription": "允許禾詰企業物料管理從照片圖庫選擇物料照片進行上傳。"
+        "NSCameraUsageDescription": "允許禾詰企業使用相機掃描 QR Code 及拍攝物料照片。",
+        "NSPhotoLibraryUsageDescription": "允許禾詰企業從照片圖庫選擇物料照片進行上傳。"
       }
     },
     "android": {
@@ -61,7 +61,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機掃描 QR Code及拍攝物料照片。"
+          "cameraPermission": "允許 $(PRODUCT_NAME) 使用相機掃描 QR Code 及拍攝物料照片。"
         }
       ],
       [
