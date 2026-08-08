@@ -11,7 +11,13 @@ import { useTabReset } from '@/hooks/use-tab-reset';
 import { cn } from '@/lib/utils';
 import { haptic } from '@/lib/haptics';
 import { playScanSuccessFeedback, preloadScanSound } from '@/lib/scan-feedback';
+import { decryptSettingsQr } from '@/lib/qr-setting-crypto';
 import { PrimaryButton, DangerButton, ACTION_BUTTON_TOKENS } from '@/components/ui/action-button';
+
+const OLD_QR_PATTERN = /^[A-Z][0-9]{8}$/;
+const NEW_QR_TYPE_A_PATTERN = /^[A-Z][0-9]{9}$/;
+const NEW_QR_TYPE_B_PATTERN = /^[A-Z]{2}[0-9]{8}$/;
+const INVALID_QR_MESSAGE = '您讀取的 QR CODE 內容，不是我們要的格式哦。';
 
 interface ScannedItem {
   id: string;
@@ -31,6 +37,7 @@ export default function ScanScreen() {
   const [banner, setBanner] = useState<{ type: 'success' | 'warning'; text: string } | null>(null);
   const lastScanRef = useRef<{ value: string; time: number }>({ value: '', time: 0 });
   const bannerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const invalidAlertOpenRef = useRef(false);
 
   // 每次進入掃描分頁時重置回初始掃描畫面（不停留在上次的傳送結果頁）
   useFocusEffect(
@@ -84,31 +91,80 @@ export default function ScanScreen() {
   };
 
   const handleBarCodeScanned = (result: any) => {
-    const scannedValue = result.data;
+    const rawScannedValue = String(result.data ?? '').trim();
     const now = Date.now();
 
     // 節流：相機每秒觸發多次掃描事件，同一條碼 2 秒內只處理一次，
-    // 避免重複提示連續彈出造成畫面卡住
+    // 避免重複提示連續彈出造成畫面卡住。
     if (
-      lastScanRef.current.value === scannedValue &&
+      lastScanRef.current.value === rawScannedValue &&
       now - lastScanRef.current.time < 2000
     ) {
       return;
     }
-    lastScanRef.current = { value: scannedValue, time: now };
+    lastScanRef.current = { value: rawScannedValue, time: now };
 
-    // 檢查是否已存在相同的掃描結果
+    let scannedValue = '';
+
+    // 舊條碼：1 碼大寫英文字母 + 8 碼數字，共 9 碼。
+    // 這些條碼已在流通，維持原本明文流程，不做 AES 解密。
+    if (OLD_QR_PATTERN.test(rawScannedValue)) {
+      scannedValue = rawScannedValue;
+    } else if (rawScannedValue.startsWith('QR1.')) {
+      // 新條碼：QR Code 內容必須是 AES-256-GCM 加密的 QR1 格式。
+      // 解密後只接受以下兩種 10 碼格式：
+      // 1. 1 碼大寫英文字母 + 9 碼數字
+      // 2. 2 碼大寫英文字母 + 8 碼數字
+      try {
+        const decryptedValue = decryptSettingsQr(rawScannedValue).trim();
+
+        if (
+          NEW_QR_TYPE_A_PATTERN.test(decryptedValue) ||
+          NEW_QR_TYPE_B_PATTERN.test(decryptedValue)
+        ) {
+          scannedValue = decryptedValue;
+        }
+      } catch {
+        scannedValue = '';
+      }
+    }
+
+    // 不符合舊 9 碼格式，也不是可正確解密且符合新 10 碼格式的 QR Code。
+    if (!scannedValue) {
+      haptic.warning();
+
+      if (!invalidAlertOpenRef.current) {
+        invalidAlertOpenRef.current = true;
+        Alert.alert('提示', INVALID_QR_MESSAGE, [
+          {
+            text: '確定',
+            onPress: () => {
+              invalidAlertOpenRef.current = false;
+              // 關閉訊息後重新開始 2 秒節流，避免鏡頭仍對著同一張錯誤 QR Code
+              // 時立即再次跳出訊息。
+              lastScanRef.current = { value: rawScannedValue, time: Date.now() };
+            },
+          },
+        ]);
+      }
+
+      return;
+    }
+
+    // 檢查是否已存在相同的「實際條碼值」。
+    // 新條碼以解密後內容比對，避免同一資料使用不同 IV 加密後被視為不同條碼。
     const isDuplicate = scannedItems.some((item) => item.value === scannedValue);
 
     if (isDuplicate) {
       haptic.warning();
       // 使用非阻塞橫幅提示取代 Alert，避免相機持續觸發掃描事件
       // 導致 Alert 重複彈出、OK 按鈕無法點擊的卡機問題
-      showBanner('warning', `重複：已掃描過此條碼`);
+      showBanner('warning', '重複：已掃描過此條碼');
       return;
     }
 
-    // 新增掃描結果
+    // 新增掃描結果。新 AES 條碼只保存解密後的 10 碼內容，
+    // 因此完成傳送時，後端仍收到原本可識別的條碼值，不會收到 AES 密文。
     const newItem: ScannedItem = {
       id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
       value: scannedValue,
